@@ -1,0 +1,33 @@
+[
+  {
+    "title": "prueba",
+    "description": "Producto prueba",
+    "code": "p00001",
+    "price": 50000,
+    "stock": 5,
+    "category": "prueba",
+    "id": 487,
+    "status": true
+  },
+  {
+    "title": "prueba2",
+    "description": "Producto prueba",
+    "code": "p00001",
+    "price": 50000,
+    "stock": 5,
+    "category": "prueba",
+    "id": 389,
+    "status": true
+  },
+  {
+    "title": "pruebaModificado",
+    "description": "Producto prueba",
+    "code": "p00001",
+    "price": 50000,
+    "stock": 5,
+    "category": "prueba",
+    "tumbnails": "url/prueba",
+    "id": 717,
+    "status": true
+  }
+]
