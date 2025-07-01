@@ -1,26 +1,11 @@
 import { Router } from "express";
 import __dirname from "../utils.js";
 
+import {readCarts, writeCarts} from "../service/carts.manager.js";
+
 const router = Router();
 
-// FUNCIONES PARA TRABAJAR ARCHIVO JSON
-import fs from 'fs';
-import path from 'path';
 
-// DIRECTORIO DEL ARCHIVO JSON
-const filePath = path.join(__dirname, '/data/carts.json');
-
-// LEER PRODUCTOS
-function readCarts() {
-    if (!fs.existsSync(filePath)) return [];
-    const data = fs.readFileSync(filePath, 'utf-8');
-    return data ? JSON.parse(data) : [];
-}
-
-// ESCRIBIR PRODUCTOS
-function writeCarts(carts) {
-    fs.writeFileSync(filePath, JSON.stringify(carts, null, 2));
-}
 
 // POST creacion del cart
 /* ESTRUCTURA DEL JSON
