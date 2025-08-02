@@ -44,4 +44,21 @@ export default class CartManager {
         const cartDeleted = await cartModel.deleteOne({_id: id})
         return cartDeleted
     }
+
+    updateProductQuantity = async (cartId, productId, quantity) => {
+        const cart = await cartModel.findById(cartId);
+        const producto = cart.products.find(p => p.productId.toString() === productId);
+        if (producto) {
+            producto.quantity = quantity;
+            await cart.save();
+        }
+        return cart;
+    }
+
+    removeProductFromCart = async (cartId, productId) => {
+        const cart = await cartModel.findById(cartId);
+        cart.products = cart.products.filter(p => p.productId.toString() !== productId);
+        await cart.save();
+        return cart;
+    }
 }

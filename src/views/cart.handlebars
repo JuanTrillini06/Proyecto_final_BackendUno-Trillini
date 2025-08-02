@@ -1,14 +1,65 @@
 <h1>🛒 Mi Carrito</h1>
 
-<ul>
-  {{#each cart.products}}
-    <li>{{this.productId.title}} - Cantidad: {{this.quantity}}</li>
-  {{/each}}
-</ul>
+<table>
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Cantidad</th>
+      <th>Actualizar</th>
+      <th>Eliminar</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each cart.products}}
+      <tr>
+        <td>{{this.productId.title}}</td>
+        <td>
+          <input type="number" id="cantidad-{{this.productId._id}}" value="{{this.quantity}}" min="1" />
+        </td>
+        <td>
+          <button style="background-color:rgb(69, 82, 158); color:whitesmoke" onclick="actualizarCantidad('{{../cart._id}}','{{this.productId._id}}')">Actualizar</button>
+        </td>
+        <td>
+          <button style="background-color:rgb(158, 69, 69); color:whitesmoke" onclick="eliminarProducto('{{../cart._id}}','{{this.productId._id}}')">Eliminar</button>
+        </td>
+      </tr>
+    {{/each}}
+  </tbody>
+</table>
 <hr>
 <button style="background-color:rgb(69, 158, 69); color:whitesmoke" type="submit" >Comprar</button>
 <hr>
 <button style="background-color:rgb(158, 69, 69); color:whitesmoke" type="submit" onclick="volver()" >Volver al Listado</button>
+
+<script>
+  async function actualizarCantidad(cartId, productId) {
+    const nuevaCantidad = document.getElementById(`cantidad-${productId}`).value;
+
+    const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ quantity: parseInt(nuevaCantidad) })
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+      alert('Cantidad actualizada');
+      location.reload();
+    }
+  }
+
+  async function eliminarProducto(cartId, productId) {
+    const response = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+      method: 'DELETE'
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+      alert('Producto eliminado');
+      location.reload();
+    }
+  }
+</script>
 
 <script>
   function volver() {

@@ -63,4 +63,27 @@ router.delete('/api/carts/:cid', async (req, res) => {
   }
 });
 
+// PUT: actualizar cantidad de un producto
+router.put('/api/carts/:cid/products/:pid', async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+    const cart = await cartManager.updateProductQuantity(cid, pid, quantity);
+    res.send({ status: 'success', payload: cart });
+  } catch (error) {
+    res.status(500).send({ status: 'error', error: 'No se pudo actualizar cantidad' });
+  }
+});
+
+// DELETE: eliminar producto del carrito
+router.delete('/api/carts/:cid/products/:pid', async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const cart = await cartManager.removeProductFromCart(cid, pid);
+    res.send({ status: 'success', payload: cart });
+  } catch (error) {
+    res.status(500).send({ status: 'error', error: 'No se pudo eliminar producto' });
+  }
+});
+
 export default router;
