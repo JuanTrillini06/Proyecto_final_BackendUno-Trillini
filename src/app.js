@@ -1,14 +1,11 @@
 import express from "express";
-import productRouter from "./routes/products.views.routes.js";
-import cartRouter from "./routes/carts.routes.js";
-import { readProducts } from "./service/products.manager.js"
-
+import mongoose from "mongoose";
 import handlebars from "express-handlebars";
-import { Server } from 'socket.io';
-import http from 'http';
-
-
 import __dirname from "./utils.js";
+
+import productRouter from "./routes/products.routes.js";
+import cartRouter from "./routes/carts.routes.js";
+import viewsRouter from "./routes/views.routes.js";
 
 
 const app = express();
@@ -16,26 +13,31 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
-const PORT = 8080;
 
 app.engine("handlebars", handlebars.engine());
 app.set ("views", __dirname + "/views");
 app.set("view engine", "handlebars");
 
-const httpServer = http.createServer(app); // ahora sí
-const socketServer = new Server(httpServer);
 
-httpServer.listen(PORT, () => {
+
+app.use("/api/products", productRouter);
+app.use("/", cartRouter);
+app.use("/", viewsRouter);
+
+const PORT = 8080;
+
+app.listen(PORT, () => {
   console.log(`Server run on port ${PORT}`);
 });
 
-console.log('Hola proyecto final');
 
-app.use("/", productRouter);
-app.use("/api/carts", cartRouter);
-
-socketServer.on('connection', socket => {
-  console.log('🔌 Cliente conectado a Socket.IO');
-  const products = readProducts();
-  socket.emit('productosActualizados', products);
-});
+const connectMongoDB = async () => {
+  try {
+    await mongoose.connect("mongodb+srv://juantrillini51:HKRHTqdNG3UVJ56A@backenduno.nc1xfxj.mongodb.net/Proyecto-final?retryWrites=true&w=majority&appName=BackendUno");
+    console.log("Conectado con exito a MongoDB usando Moongose.");
+  } catch (error) {
+    console.error("No se pudo conectar a la BD usando Moongose: " + error);
+    process.exit();
+  }
+};
+connectMongoDB()

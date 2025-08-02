@@ -1,0 +1,76 @@
+<h1>🛍️ Lista de productos</h1>
+
+
+<form id="cart-form">
+  {{#each docs}}
+    <div class="product">
+      <h3>{{this.title}}</h3>
+      <h4>{{this.price}}</h4>
+      <input type="number" id="quantity-{{this._id}}" min="1" value="1" />
+      <button type="button" onclick="addToCart('{{this._id}}')">Agregar al carrito</button>
+    </div>
+  {{/each}}
+</form>
+
+<hr>
+
+<button style="background-color:rgb(69, 158, 69); color:whitesmoke" onclick= "irAlCarrito()">Ir al carrito</button>
+
+<hr>
+
+<div style="display:flex; justify-content:center">
+    {{#if hasPrevPage}}
+    <a href={{this.prevLink}}>
+      << Anterior </a>
+        {{/if}}
+
+        &nbsp;
+        {{this.page}}
+        &nbsp;
+
+        {{#if hasNextPage}}
+        <a href={{this.nextLink}}>
+          >> Siguiente </a>
+        {{/if}}
+
+</div>
+
+<script>
+  async function addToCart(productId) {
+    const inputCantidad = document.getElementById(`quantity-${productId}`);
+    const quantity = parseInt(inputCantidad.value);
+
+    const cartId = localStorage.getItem('cartId');
+
+    const payload = {
+      productId,
+      quantity
+    };
+
+    const response = await fetch(`/api/carts${cartId ? '/' + cartId : ''}`, {
+      method: cartId ? 'PUT' : 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await response.json();
+    if (result.status === 'success') {
+      if (!cartId) localStorage.setItem('cartId', result.cartId);
+      alert('Producto agregado');
+    }
+  }
+</script>
+
+
+<script>
+  function irAlCarrito() {
+  const cartId = localStorage.getItem('cartId');
+  if (cartId) {
+    window.location.href = `/cart/${cartId}`;
+  } else {
+    alert("Primero agrega un producto al carrito");
+  }
+}
+</script>

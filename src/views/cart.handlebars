@@ -1,0 +1,18 @@
+<h1>🛒 Mi Carrito</h1>
+
+<ul>
+  {{#each cart.products}}
+    <li>{{this.productId.title}} - Cantidad: {{this.quantity}}</li>
+  {{/each}}
+</ul>
+<hr>
+<button style="background-color:rgb(69, 158, 69); color:whitesmoke" type="submit" >Comprar</button>
+<hr>
+<button style="background-color:rgb(158, 69, 69); color:whitesmoke" type="submit" onclick="volver()" >Volver al Listado</button>
+
+<script>
+  function volver() {
+    window.location.href = `/products`;
+  }
+  
+</script>
